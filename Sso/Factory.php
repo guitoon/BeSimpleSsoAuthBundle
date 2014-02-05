@@ -76,10 +76,10 @@ class Factory
      *
      * @return Manager
      */
-    public function getManager($id, $checkUrl)
+    public function getManager($id, $checkUrl, $logoutUrl = null)
     {
         if (!isset($this->managers[$id])) {
-            $this->managers[$id] = $this->createManager($id, $checkUrl);
+            $this->managers[$id] = $this->createManager($id, $checkUrl, $logoutUrl);
         }
 
         return $this->managers[$id];
@@ -93,7 +93,7 @@ class Factory
      *
      * @throws \BeSimple\SsoAuthBundle\Exception\ConfigNotFoundException
      */
-    private function createManager($id, $checkUrl)
+    private function createManager($id, $checkUrl, $logoutUrl = null)
     {
         $parameter = sprintf('be_simple.sso_auth.manager.%s', $id);
 
@@ -103,6 +103,10 @@ class Factory
 
         $config = $this->container->getParameter($parameter);
         $config['server']['check_url'] = $checkUrl;
+        
+        if(!is_null($logoutUrl)) {
+            $config['server']['logout_url'] = $logoutUrl;
+        }
 
         return new Manager($this->getServer($config['server']), $this->getProtocol($config['protocol']), $this->client);
     }
