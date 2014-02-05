@@ -56,6 +56,6 @@ class SsoLogoutSuccessHandler implements LogoutSuccessHandlerInterface
             return $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         }
 
-        return new RedirectResponse($manager->getServer()->getLogoutUrl());
+        return new RedirectResponse($manager->getServer()->getLogoutUrl($request));
     }
 }
